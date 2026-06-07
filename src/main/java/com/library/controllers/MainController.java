@@ -263,33 +263,55 @@ public class MainController {
         if (title.isEmpty() || author.isEmpty() || isbn.isEmpty() || qty.isEmpty()) {
             showAlert(Alert.AlertType.WARNING, "Бүх талбарыг бөглөнө үү!");
             return;
-        }
+        }      
 
-        // available_qty = available_qty + (шинэ quantity - хуучин quantity)
-        // Жишээ: хуучин=5, боломжит=3, шинэ=10 => 3 + (10-5) = 8
-        String updateQuery = "UPDATE book SET title=?, author=?, isbn=?, " +
-                             "available_qty = available_qty + (? - quantity), " +
-                             "quantity=? WHERE book_id=?";
+        int newQty = Integer.parseInt(qty);
 
+        // Хуучин quantity болон available_qty-г авах
+        String selectQuery = "SELECT quantity, available_qty FROM book WHERE book_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(updateQuery)) {
-            int newQty = Integer.parseInt(qty);
-            ps.setString(1, title);
-            ps.setString(2, author);
-            ps.setString(3, isbn);
-            ps.setInt(4, newQty);
-            ps.setInt(5, newQty);
-            ps.setInt(6, selectedBookId);
-            ps.executeUpdate();
+            PreparedStatement ps = conn.prepareStatement(selectQuery)) {
+
+            ps.setInt(1, selectedBookId);
+            ResultSet rs = ps.executeQuery();
+
+               if (rs.next()) {
+            int oldQty       = rs.getInt("quantity");
+            int availableQty = rs.getInt("available_qty");
+            int newAvailable = availableQty + (newQty - oldQty);
+
+            // Шинэ боломжит үлдэгдэл 0-ээс бага болох гэж байвал зогсоох
+            if (newAvailable < 0) {
+                showAlert(Alert.AlertType.WARNING,
+                    "Тоо ширхэгийг " + newQty + " болгох боломжгүй!\n" +
+                    "Одоо " + (oldQty - availableQty) + " ном түрээсэлсэн байгаа тул\n" +
+                    "хамгийн багадаа " + (oldQty - availableQty) + " байх ёстой.");
+                return;
+            }
+
+            String updateQuery = "UPDATE book SET title=?, author=?, isbn=?, " +
+                                 "available_qty = ?, quantity=? WHERE book_id=?";
+
+            try (PreparedStatement psUpdate = conn.prepareStatement(updateQuery)) {
+                psUpdate.setString(1, title);
+                psUpdate.setString(2, author);
+                psUpdate.setString(3, isbn);
+                psUpdate.setInt(4, newAvailable);
+                psUpdate.setInt(5, newQty);
+                psUpdate.setInt(6, selectedBookId);
+                psUpdate.executeUpdate();
+            }
+
             loadBooksFromDatabase();
             clearBookFields();
             showAlert(Alert.AlertType.INFORMATION, "Ном амжилттай засагдлаа!");
-        } catch (SQLException e) {
-            showAlert(Alert.AlertType.ERROR, "Засахад алдаа гарлаа!");
-            e.printStackTrace();
         }
-    }
 
+    } catch (SQLException e) {
+        showAlert(Alert.AlertType.ERROR, "Засахад алдаа гарлаа!");
+        e.printStackTrace();
+    }
+}
     @FXML
     void btnDelete(ActionEvent event) {
         if (selectedBookId == -1) {
@@ -298,7 +320,7 @@ public class MainController {
         }
 
         // Түрээсэлсэн байгаа эсэхийг шалгах
-        String checkQuery = "SELECT COUNT(*) FROM borrow_records WHERE bookid = ? AND status != 'буцаасан'";
+        String checkQuery = "SELECT COUNT(*) FROM borrow_records WHERE bookid = ? AND status != 'түрээслэсэн' OR status = 'хугацаа хэтэрсэн'";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(checkQuery)) {
             ps.setInt(1, selectedBookId);
@@ -433,7 +455,7 @@ public class MainController {
         }
 
         // Түрээсэлсэн байгаа эсэхийг шалгах
-        String checkQuery = "SELECT COUNT(*) FROM borrow_records WHERE memberid = ? AND status != 'буцаасан'";
+        String checkQuery = "SELECT COUNT(*) FROM borrow_records WHERE memberid = ? AND status != 'түрээслэсэн' OR status = 'хугацаа хэтэрсэн'";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(checkQuery)) {
             ps.setInt(1, selectedMemberId);
