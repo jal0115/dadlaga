@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefWidth="420.0" spacing="15.0"
+      style="-fx-background-color: #FFFFFF;"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.library.controllers.RentDialogController">
+  <padding>
+    <Insets bottom="25.0" left="25.0" right="25.0" top="25.0" />
+  </padding>
+  <children>
+    <Label text="Шинэ номын түрээс бүртгэх" style="-fx-text-fill: #1565C0;">
+      <font><Font name="System Bold" size="15.0" /></font>
+    </Label>
+
+    <GridPane hgap="15.0" vgap="12.0">
+      <columnConstraints>
+        <ColumnConstraints minWidth="120.0" />
+        <ColumnConstraints hgrow="ALWAYS" />
+      </columnConstraints>
+      <rowConstraints>
+        <RowConstraints minHeight="35.0" />
+        <RowConstraints minHeight="35.0" />
+        <RowConstraints minHeight="35.0" />
+      </rowConstraints>
+      <children>
+        <Label text="Уншигч сонгох:" style="-fx-text-fill: #555555;" />
+        <Label text="Ном сонгох:" style="-fx-text-fill: #555555;" GridPane.rowIndex="1" />
+        <Label text="Буцаах өдөр:" style="-fx-text-fill: #555555;" GridPane.rowIndex="2" />
+        <ComboBox fx:id="cmbMember" prefWidth="260.0" GridPane.columnIndex="1"
+                  style="-fx-border-color: #BBDEFB; -fx-border-radius: 4;" />
+        <ComboBox fx:id="cmbBook" prefWidth="260.0" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                  style="-fx-border-color: #BBDEFB; -fx-border-radius: 4;" />
+        <DatePicker fx:id="dpDueDate" prefWidth="260.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      </children>
+    </GridPane>
+
+    <HBox alignment="CENTER_RIGHT" spacing="10.0">
+      <VBox.margin><Insets top="5.0" /></VBox.margin>
+      <children>
+        <Button fx:id="btnCancel" text="Цуцлах" onAction="#onCancelClick"
+                style="-fx-background-color: #EEEEEE; -fx-background-radius: 4; -fx-cursor: hand;" />
+        <Button text="Хадгалах" onAction="#onSaveClick"
+                style="-fx-background-color: #1976D2; -fx-text-fill: white; -fx-background-radius: 4; -fx-cursor: hand;">
+          <font><Font name="System Bold" size="12.0" /></font>
+        </Button>
+      </children>
+    </HBox>
+  </children>
+</VBox>
