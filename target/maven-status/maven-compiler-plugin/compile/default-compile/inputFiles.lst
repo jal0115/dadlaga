@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:\Users\user\Desktop\dadlaga\db\library\src\main\java\module-info.java
 C:\Users\user\Desktop\dadlaga\db\library\src\main\java\com\library\models\Book.java
 C:\Users\user\Desktop\dadlaga\db\library\src\main\java\com\library\database\DBConnection.java
@@ -6,3 +7,7 @@ C:\Users\user\Desktop\dadlaga\db\library\src\main\java\com\library\controllers\R
 C:\Users\user\Desktop\dadlaga\db\library\src\main\java\com\library\App.java
 C:\Users\user\Desktop\dadlaga\db\library\src\main\java\com\library\models\Rental.java
 C:\Users\user\Desktop\dadlaga\db\library\src\main\java\com\library\models\Member.java
+=======
+C:\Users\user\Desktop\dadl\calculator\calc\src\main\java\com\example\PleaseProvideControllerClassName.java
+C:\Users\user\Desktop\dadl\calculator\calc\src\main\java\com\example\App.java
+>>>>>>> 3a4ced913b1452f6e5ca9ff307eafbc8847f2cea
